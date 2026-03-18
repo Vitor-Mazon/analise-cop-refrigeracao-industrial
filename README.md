@@ -6,6 +6,8 @@ Sistemas de refrigeração industrial possuem impacto direto no consumo energét
 
 Este projeto realiza uma análise exploratória do desempenho de um sistema de refrigeração ao longo de uma semana de operação, com foco na identificação de padrões, regimes operacionais e eventos de degradação de eficiência.
 
+O projeto utiliza o conceito de Digital Twin simplificado, no qual um modelo analítico do sistema é utilizado para avaliar o desempenho esperado e identificar desvios operacionais a partir de dados históricos.
+
 ## Objetivos
 
 - Avaliar a estabilidade operacional do sistema.
@@ -24,8 +26,8 @@ A estrutura dos dados inclui as seguintes variáveis:
 - Pressão do óleo
 - Nível do tanque
 
-*Observação*:
-Os dados utilizados neste repositório são sintéticos, gerados com o objetivo de simular o comportamento de um sistema real. Eles não representam dados operacionais de nenhuma empresa.
+*Observação:
+Os dados utilizados neste repositório são sintéticos, gerados com o objetivo de simular o comportamento de um sistema real. Eles não representam dados operacionais de nenhuma empresa.*
 
 ## Metodologia
 
@@ -48,22 +50,27 @@ Optou-se por uma abordagem exploratória robusta, porém pragmática, adequada a
 - Pandas
 - Matplotlib
 - Jupyter Notebook
+- Databricks
+- SQL
+- Lakehouse Architecture
 
 Em ambientes industriais produtivos, análises similares poderiam ser realizadas com ferramentas estatísticas como Minitab ou plataformas de análise de séries temporais integradas ao historiador de dados da planta.
 
 ## Estrutura do projeto
 
-analise-cop-refrigeracao-industrial/
+industrial-digital-twin/
 
-- notebooks/        → Notebook principal da análise
-
-- data/             → Dados sintéticos utilizados
-
-- reports/          → Versão em PDF do estudo
-
-- src/              → Código auxiliar (geração de dados)
-
-- README.md
+├── notebooks
+│   └── 01_dataset_generation
+│
+├── src
+│   └── simularDados.py
+│
+├── data
+│
+├── reports
+│
+└── README.md
 
 ## Principais Resultados
 

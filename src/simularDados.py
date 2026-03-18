@@ -1,20 +1,25 @@
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 def gerar_dados_fake(
     filename="dados_refrigeracao.csv",
     dias=7,
     freq_min=5,
-    seed=42
+    seed=42,
+    output_dir="/Volumes/analytics/digital_twin/data/raw"
 ):
-    rng_toggle = np.random.default_rng(seed)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    filepath = Path(output_dir) / filename
 
     n = int(dias * 24 * 60 / freq_min)
     tempo = pd.date_range("2026-01-01", periods=n, freq=f"{freq_min}min")
 
     # ---- Base "normal" do processo ----
     # Temperatura de entrada (°C): varia com carga térmica do processo
-    T_in = 28 + 1.2*np.sin(np.linspace(0, 8*np.pi, n)) + R_toggle_normal(RNG=(RNG:=np.random.default_rng(seed)), n=n, scale=0.25)
+    RNG = np.random.default_rng(seed)
+    T_in = 28 + 1.2*np.sin(np.linspace(0, 8*np.pi, n)) + R_toggle_normal(RNG, n, 0.25)
 
     # DeltaT típico (entrada - saída): 3 a 6°C, com ruído
     dT = 4.5 + 0.8*np.sin(np.linspace(0, 4*np.pi, n) + 0.5) + RNG.normal(0, 0.25, n)
@@ -66,12 +71,8 @@ def gerar_dados_fake(
     df.loc[df.index[idx3], "vazao_m3_h"] *= 0.85
 
     # Salvar
-    df.to_csv(filename, index=False)
-    return filename
+    df.to_csv(filepath, index=False)
+    return filepath
 
 def R_toggle_normal(RNG, n, scale=1.0):
     return RNG.normal(0, scale, n)
-
-# Gere o arquivo
-arquivo = gerar_dados_fake()
-print("Gerado:", arquivo)
