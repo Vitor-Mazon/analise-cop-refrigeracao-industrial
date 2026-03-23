@@ -1,88 +1,174 @@
-# Análise de Eficiência Energética (COP) em Sistema de Refrigeração Industrial
+# Industrial Digital Twin – Análise de Eficiência Energética (COP)
 
-## Contexto
+## Visão Geral
 
-Sistemas de refrigeração industrial possuem impacto direto no consumo energético e nos custos operacionais de plantas produtivas. A eficiência desses sistemas pode ser avaliada por meio do Coefficient of Performance (COP), indicador que relaciona a capacidade de remoção de calor com a potência elétrica consumida.
+Este projeto implementa um pipeline de dados completo para análise de eficiência energética em sistemas de refrigeração industrial, utilizando o indicador **Coefficient of Performance (COP)**.
 
-Este projeto realiza uma análise exploratória do desempenho de um sistema de refrigeração ao longo de uma semana de operação, com foco na identificação de padrões, regimes operacionais e eventos de degradação de eficiência.
+A solução segue uma arquitetura moderna de dados (Lakehouse), transformando dados operacionais brutos em indicadores analíticos capazes de apoiar a tomada de decisão em ambientes industriais.
 
-O projeto utiliza o conceito de Digital Twin simplificado, no qual um modelo analítico do sistema é utilizado para avaliar o desempenho esperado e identificar desvios operacionais a partir de dados históricos.
+O projeto simula um **Digital Twin simplificado**, permitindo analisar o comportamento do sistema, identificar padrões operacionais e detectar eventos de degradação de desempenho.
+
+---
+
+## Problema de Negócio
+
+Sistemas de refrigeração industrial representam uma parcela significativa do consumo energético em plantas produtivas.
+
+Pequenas variações operacionais podem gerar:
+- aumento de consumo energético
+- perda de eficiência
+- desgaste prematuro de equipamentos
+
+O desafio é identificar esses desvios de forma rápida e confiável.
+
+---
 
 ## Objetivos
 
-- Avaliar a estabilidade operacional do sistema.
-- Identificar períodos de queda no COP.
-- Relacionar o COP com variáveis operacionais críticas.
-- Gerar insights que possam apoiar decisões rápidas em ambiente industrial.
+- Monitorar a eficiência energética do sistema (COP)
+- Identificar padrões e regimes operacionais
+- Detectar eventos de baixa performance
+- Relacionar eficiência com variáveis de processo
+- Estruturar um pipeline de dados escalável
 
-## Dados Utilizados
+---
 
-A estrutura dos dados inclui as seguintes variáveis:
+## Arquitetura de Dados
 
-- Temperatura da água na entrada do sistema (°C)
-- Temperatura da água na saída (°C)
-- Vazão total de água (m³)
-- Potência elétrica consumida (kW)
-- Pressão do óleo
-- Nível do tanque
+O projeto segue o modelo **Lakehouse**, dividido em três camadas:
 
-*Observação:
-Os dados utilizados neste repositório são sintéticos, gerados com o objetivo de simular o comportamento de um sistema real. Eles não representam dados operacionais de nenhuma empresa.*
+- **Raw** → dados brutos simulados  
+- **Silver** → dados tratados e enriquecidos com lógica física  
+- **Gold** → dados analíticos prontos para consumo  
 
-## Metodologia
+Fluxo:
 
-A análise foi conduzida utilizando Python, com foco em interpretação rápida e aplicável ao contexto industrial.
+**Simulação → Raw → Silver → Gold → Análise**
 
-As etapas principais incluíram:
 
-- Cálculo do COP ao longo do tempo
-- Análise de séries temporais
+📄 Detalhes: `docs/arquitetura.md`
+
+---
+
+## Pipeline Analítico
+
+### Camada Silver
+- Cálculo de variáveis físicas:
+  - ΔT (diferença de temperatura)
+  - vazão mássica
+  - carga térmica (q̇)
+  - COP
+- Validação física dos dados
+
+### Camada Gold
+- Classificação de regimes operacionais
+- Identificação de alertas (baixa eficiência)
+- Detecção de eventos anômalos
+- Cálculo de métricas derivadas (ex: variabilidade do COP)
+
+---
+
+## Análise Exploratória
+
+A análise foi conduzida a partir da camada **Silver**, considerando apenas dados fisicamente válidos.
+
+Principais abordagens:
+- Distribuição do COP
 - Estatística descritiva
-- Histogramas para avaliação da distribuição do desempenho
-- Análise de correlação entre COP e variáveis operacionais
-- Identificação visual de regimes operacionais distintos
+- Análise temporal
+- Correlação com variáveis operacionais
+- Identificação de eventos de degradação
 
-Optou-se por uma abordagem exploratória robusta, porém pragmática, adequada a cenários industriais onde decisões precisam ser tomadas mesmo com dados incompletos.
+---
 
-## Ferramentas Utilizadas
+## SQL – Camada Gold
 
-- Python
-- Pandas
-- Matplotlib
-- Jupyter Notebook
+O projeto inclui queries SQL para consumo analítico:
+
+### Validação
+- Distribuição por regime operacional
+- Percentual de alertas
+- Percentual de eventos anômalos
+
+### Análise
+- Estatísticas por regime
+- Identificação dos períodos mais críticos
+
+### Monitoramento
+- Evolução diária do COP
+- Volume de alertas operacionais
+
+---
+
+## Tecnologias Utilizadas
+
+- Python (Pandas, Matplotlib)
 - Databricks
 - SQL
+- Parquet
 - Lakehouse Architecture
+- GitHub
 
-Em ambientes industriais produtivos, análises similares poderiam ser realizadas com ferramentas estatísticas como Minitab ou plataformas de análise de séries temporais integradas ao historiador de dados da planta.
+---
 
-## Estrutura do projeto
+## Estrutura do Projeto
 
-industrial-digital-twin/
+| Caminho | Tipo | Descrição |
+|--------|------|----------|
+| industrial-digital-twin/ | Diretório raiz | Estrutura principal do projeto |
+| ├── notebooks/ | Pasta | Notebooks do pipeline de dados |
+| │   ├── 01_dataset_generation | Notebook | Geração dos dados simulados |
+| │   ├── 02_feature_engineering | Notebook | Tratamento e criação de variáveis (Silver) |
+| │   ├── 03_analysis_cop | Notebook | Análise exploratória e eficiência energética |
+| │   └── 04_gold_layer | Notebook | Criação da camada Gold |
+| ├── src/ | Pasta | Código fonte auxiliar |
+| │   └── simularDados.py | Script Python | Geração dos dados sintéticos |
+| ├── sql/ | Pasta | Scripts SQL para consumo e validação |
+| │   ├── create_gold_table.sql | SQL | Criação de tabela analítica |
+| │   ├── gold_validation.sql | SQL | Validação dos dados Gold |
+| │   └── gold_analysis.sql | SQL | Consultas analíticas |
+| ├── docs/ | Pasta | Documentação do projeto |
+| │   ├── arquitetura.md | Documento | Arquitetura de dados |
+| │   └── dicionario.md | Documento | Dicionário de dados |
+| ├── data/ | Pasta | Referência lógica das camadas de dados |
+| └── README.md | Documento | Visão geral do projeto |
 
-├── notebooks
-│   └── 01_dataset_generation
-│
-├── src
-│   └── simularDados.py
-│
-├── data
-│
-├── reports
-│
-└── README.md
+---
 
 ## Principais Resultados
 
-- Identificação de períodos pontuais de degradação de eficiência
-- Associação entre quedas de vazão e redução do COP
-- Indícios de regimes operacionais distintos ao longo da semana analisada
-- Comportamento predominantemente estável, com eventos anômalos localizados
+- Sistema apresenta operação predominantemente estável (COP ~3.2–3.4)
+- Eventos de baixa eficiência estão associados principalmente à redução de vazão
+- A variabilidade operacional influencia diretamente o desempenho energético
+- É possível detectar degradações antes de falhas críticas
+
+---
+
+## Aplicação Prática
+
+Este modelo pode ser aplicado em ambientes industriais reais para:
+
+- Monitoramento contínuo de eficiência energética
+- Detecção precoce de falhas
+- Redução de consumo energético
+- Apoio à tomada de decisão operacional
+
+---
+
+## Diferenciais do Projeto
+
+- Integração entre modelagem física e análise de dados
+- Pipeline estruturado em camadas (engenharia de dados)
+- Uso de arquitetura Lakehouse (Databricks)
+- Abordagem próxima de cenários industriais reais
+- SQL aplicado para consumo analítico
+
+---
 
 ## Autor
 
-Vitor Mazon Rocha
+**Vitor Mazon Rocha**
 
-Profissional com formação em Física Computacional, atuando no desenvolvimento de análises aplicadas a processos industriais.
+Analista de Processos com formação em Física Computacional, atuando na interseção entre dados, engenharia e operações industriais.
 
 🔗 LinkedIn: https://www.linkedin.com/in/vitor-mazon/
