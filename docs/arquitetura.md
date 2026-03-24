@@ -2,11 +2,11 @@
 
 ## Visão Geral
 
-Este projeto implementa um pipeline de dados inspirado em arquiteturas modernas de Lakehouse para simular, processar e analisar o desempenho de um sistema de refrigeração industrial.
+Este projeto implementa um pipeline de dados inspirado em arquiteturas modernas de Lakehouse para simular, processar e analisar o desempenho de um sistema de refrigeração industrial (chiller).
 
-O objetivo é transformar dados operacionais brutos em informações estruturadas e confiáveis, capazes de apoiar a tomada de decisão em ambiente industrial.
+O objetivo é transformar dados operacionais brutos em informações estruturadas, confiáveis e analiticamente relevantes, suportando a tomada de decisão em contexto industrial.
 
-A arquitetura foi organizada em camadas (Raw, Silver e Gold), separando claramente as responsabilidades de ingestão, tratamento e consumo dos dados.
+A arquitetura foi organizada em camadas (Raw, Silver e Gold), separando responsabilidades de ingestão, tratamento e consumo de dados.
 
 ---
 
@@ -18,7 +18,12 @@ Simulação → Raw → Silver → Gold → Análise
 
 Cada etapa adiciona valor ao dado, evoluindo de registros brutos para indicadores operacionais.
 
-A execução do pipeline é realizada via notebooks no Databricks, permitindo reprocessamento e rastreabilidade completa.
+A execução é realizada via notebooks no Databricks:
+
+- `01_dataset_generation`: geração dos dados
+- `02_feature_engineering`: tratamento e validação
+- `03_analysis_cop`: análise exploratória
+- `04_gold_layer`: criação da camada analítica
 
 ---
 
@@ -79,7 +84,7 @@ Objetivo:
 
 ---
 
-### 🟨 Gold – Dados para Consumo Analítico
+### 🟨 Gold – Camada Analítica
 
 - Origem: dados válidos da camada Silver
 - Armazenamento: `/Volumes/analytics/digital_twin/data/gold`
@@ -88,7 +93,7 @@ Objetivo:
 Transformações aplicadas:
 
 - Filtragem de dados inválidos (`flag_invalido = False`)
-- Criação de indicadores operacionais
+- Construção de modelo analítico
 
 #### 🔹 Indicadores:
 - `regime_operacao` (baixo, médio, alto)
@@ -102,13 +107,31 @@ Transformações aplicadas:
 
 Estrutura final:
 
-- Dataset enxuto
+- Dataset enxuto e otimizado
 - Foco em interpretação operacional
-- Pronto para consumo via SQL, dashboards ou monitoramento
+- Pronto para consumo analítico
 
 Objetivo:
 
-- Disponibilizar dados prontos para tomada de decisão
+- Disponibilizar dados prontos para:
+  - consultas SQL (`/sql`)
+  - dashboards
+  - monitoramento operacional
+
+---
+
+## Consumo de Dados
+
+A camada Gold é acessada via:
+
+- SQL analítico (scripts em `/sql`)
+- Notebooks de análise
+- Possível integração com ferramentas de BI
+
+Isso permite separar claramente:
+
+- Engenharia de dados (pipeline)
+- Análise de dados (consumo)
 
 ---
 
@@ -129,7 +152,7 @@ Na camada Gold, apenas dados confiáveis são utilizados, garantindo consistênc
 ## Ambiente e Tecnologias
 
 - Databricks
-- Python (Pandas, Matplotlib)
+- Python (Pandas)
 - SQL
 - Parquet
 - Lakehouse Architecture
@@ -139,14 +162,19 @@ Benefícios:
 
 - Escalabilidade
 - Reprodutibilidade
-- Organização de dados em camadas
+- Organização em camadas
+- Separação entre processamento e consumo
 
 ---
 
 ## Considerações Finais
 
-A arquitetura proposta segue práticas utilizadas em ambientes industriais modernos, permitindo controle sobre qualidade, rastreabilidade e consumo dos dados.
+A arquitetura proposta segue práticas utilizadas em ambientes industriais e plataformas modernas de dados.
 
-Embora os dados sejam simulados, a estrutura foi projetada para fácil adaptação a cenários reais, como integração com sistemas SCADA ou historiadores industriais.
+Embora os dados sejam simulados, o pipeline foi estruturado para fácil adaptação a cenários reais, como:
+
+- integração com sistemas SCADA
+- historiadores industriais
+- ingestão em tempo quase real
 
 O resultado é um pipeline simples, porém robusto, capaz de transformar dados operacionais em insights acionáveis.
