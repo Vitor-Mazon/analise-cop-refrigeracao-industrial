@@ -24,7 +24,7 @@ Este documento descreve as variáveis utilizadas no projeto, incluindo significa
 
 | Variável | Descrição | Unidade |
 |--------|----------|--------|
-| dT_c | Diferença de temperatura (saída - entrada) | °C |
+| dT_c | Diferença de temperatura (entrada - saída) | °C |
 | vazao_m3_s | Vazão convertida para m³/s | m³/s |
 | m_dot_kg_s | Vazão mássica | kg/s |
 | qdot_kw | Transferência térmica | kW |

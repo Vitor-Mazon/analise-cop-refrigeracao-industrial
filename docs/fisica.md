@@ -75,6 +75,8 @@ Interpretação:
 
 - Representa a energia térmica removida do sistema
 
+Como c_p está em kJ/kg·°C e ṁ em kg/s, o resultado já é obtido em kW
+
 ---
 
 ## 5. Coefficient of Performance (COP)
